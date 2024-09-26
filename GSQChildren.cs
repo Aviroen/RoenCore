@@ -34,9 +34,10 @@ namespace GSQChildren
         static void Postfix(ref FarmEvent __result)
         {
             NPC npcSpouse = Game1.player.getSpouse();
-            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string value))
+            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString))
             {
-                if (value == "true" || value == "TRUE" || value == "True")
+                bool stringActivated;
+                if (Boolean.TryParse(customString, out stringActivated))
                 {
                     bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
                     if (isMarriedOrRoommates)
