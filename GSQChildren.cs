@@ -30,14 +30,15 @@ namespace GSQChildren
         {
 
         }
+
         [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")]
-        static void Postfix(ref FarmEvent __result)
+        public static void Postfix(ref FarmEvent __result)
         {
             NPC npcSpouse = Game1.player.getSpouse();
-            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString))
+            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString)) //something in here ain't right
             {
-                bool stringActivated;
-                if (Boolean.TryParse(customString, out stringActivated))
+                Boolean.TryParse(customString, result: out bool stringActivated);
+                if (stringActivated == true)
                 {
                     bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
                     if (isMarriedOrRoommates)
