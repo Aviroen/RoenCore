@@ -10,55 +10,59 @@ using StardewValley.Events;
 using StardewValley.Extensions;
 using StardewValley.Locations;
 using static StardewValley.Utility;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace GSQChildren
 {
     /// <summary>The mod entry point.</summary>
     internal sealed class ModEntry : Mod
     {
-        /*********
-        ** Public methods
-        *********/
-        /// <summary>The mod entry point, called after the mod is first loaded.</summary>
-        /// <param name="helper">Provides simplified APIs for writing mods.</param>
+        internal static IModHelper ModHelper { get; set; } = null!;
+        internal static IMonitor ModMonitor { get; set; } = null!;
+        internal static Harmony Harmony { get; set; } = null!;
+        internal static IManifest Manifest { get; set; } = null!;
+
         public override void Entry(IModHelper helper)
         {
-            helper.Events.GameLoop.DayEnding += GameLoop_DayEnding;
+            ModHelper = helper;
+            ModMonitor = Monitor;
+            Harmony = new Harmony(ModManifest.UniqueID);
+            Manifest = ModManifest;
+
+            Harmony.PatchAll();
+
+            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
         }
 
-        private void GameLoop_DayEnding(object? sender, DayEndingEventArgs e)
+        private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
-
+            
         }
-
-        [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")]
-        public static void Postfix(ref FarmEvent __result)
+        [HarmonyPatch(typeof(Utility), nameof(Utility.pickPersonalFarmEvent))] //nope i'm lost i have no idea what i'm doing
+        class Patch
         {
-            NPC npcSpouse = Game1.player.getSpouse();
-            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString)) //something in here ain't right
+            static void Postfix(ref FarmEvent __result)
             {
-                Boolean.TryParse(customString, result: out bool stringActivated);
-                if (stringActivated == true)
+                NPC npcSpouse = Game1.player.getSpouse();
+                bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
+                if (isMarriedOrRoommates)
                 {
-                    bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
-                    if (isMarriedOrRoommates)
+                    bool? flag = npcSpouse?.canGetPregnant();
+                    if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
                     {
-                        bool? flag = npcSpouse?.canGetPregnant();
-                        if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
-                        {
-                            __result = new QuestionEvent(1);
-                        }
+                        __result = new QuestionEvent(1);
                     }
-                    if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
+                }
+                if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
+                {
+                    long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
+                    if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
                     {
-                        long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
-                        if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
+                        Farmer spouse = farmerSpouse;
+                        if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
                         {
-                            Farmer spouse = farmerSpouse;
-                            if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
-                            {
-                                __result = new QuestionEvent(3);
-                            }
+                            __result = new QuestionEvent(3);
                         }
                     }
                 }
@@ -81,21 +85,7 @@ namespace GSQChildren
             }
             return false;
         }
-        /*********
-        ** Private methods
-        *********/
-        /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
-        /*NOTE TO SELF, READD "UTILITY" IN FRONT OF PLAYERSCANGETPRENGANTHERE AND YEET THE SECOND FUNCTION FOR 1.6.9
-         * 
-         * 
-         * you just patch pickPersonalFarmEvent
-which is in StardewValley.Utility 
-pickPersonalFarmEvent returns a FarmEvent to whatever calls it, and the QuestionEvent it returns for adoption/pregnancy s one of those, so you would just intercept the function after it finishes to go "you're trying to return the UFO sound in the middle of the night event? sorry, actually, you're going to return a pregnancy/adoption event bc i said so"
-(actually it would be the "dogs" nightly event not the ufo but w/e the concept is the same)
-        most of the code is already written for you from the original pickPersonalFarmEvent, you can just copy it but without the RNG check into your postfix
-        nameof(Utility.pickPersonalFarmEvent)
-         */
+
+        //NOTE TO SELF, READD "UTILITY" IN FRONT OF PLAYERSCANGETPRENGANTHERE AND YEET THE SECOND FUNCTION FOR 1.6.9
     }
 }
