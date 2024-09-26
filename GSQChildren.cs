@@ -7,6 +7,7 @@ using StardewValley.Characters;
 using StardewValley.Events;
 using StardewValley.Locations;
 using System.Reflection;
+using StardewValley.TerrainFeatures;
 
 namespace GSQChildren
 {
@@ -27,6 +28,11 @@ namespace GSQChildren
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+
+            Harmony.Patch(
+      original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
+      postfix: new HarmonyMethod(typeof(ModEntry), nameof(Postfix))  // assumes main mod class is called ModEntry
+    );
 
         }
 
@@ -51,23 +57,30 @@ namespace GSQChildren
             ModMonitor.Log($"We're inside the postfix", LogLevel.Error);
             NPC npcSpouse = Game1.player.getSpouse();
             bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
-            if (isMarriedOrRoommates)
+            if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString))
             {
-                bool? flag = npcSpouse?.canGetPregnant();
-                if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
+                Boolean.TryParse(customString, result: out bool stringActivated);
+                if (stringActivated == true)
                 {
-                    __result = new QuestionEvent(1);
-                }
-            }
-            if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
-            {
-                long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
-                if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
-                {
-                    Farmer spouse = farmerSpouse;
-                    if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
+                    if (isMarriedOrRoommates)
                     {
-                        __result = new QuestionEvent(3);
+                        bool? flag = npcSpouse?.canGetPregnant();
+                        if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
+                        {
+                            __result = new QuestionEvent(1);
+                        }
+                    }
+                    if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
+                    {
+                        long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
+                        if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
+                        {
+                            Farmer spouse = farmerSpouse;
+                            if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
+                            {
+                                __result = new QuestionEvent(3);
+                            }
+                        }
                     }
                 }
             }
