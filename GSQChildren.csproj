@@ -6,7 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<GamePath>D:\Steam\steamapps\common\Stardew Valley 1-6-8</GamePath>
+		<GamePath>D:\Steam\steamapps\common\Stardew Valley 1-6-8 cmod</GamePath>
 	</PropertyGroup>
 
 	<ItemGroup>

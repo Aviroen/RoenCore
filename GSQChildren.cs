@@ -1,17 +1,12 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewModdingAPI.Utilities;
 using HarmonyLib;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Events;
-using StardewValley.Extensions;
 using StardewValley.Locations;
-using static StardewValley.Utility;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace GSQChildren
 {
@@ -30,40 +25,49 @@ namespace GSQChildren
             Harmony = new Harmony(ModManifest.UniqueID);
             Manifest = ModManifest;
 
-            Harmony.PatchAll();
-
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+            helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+
         }
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
-            
+            ModMonitor.Log($"Got past game launched.", LogLevel.Error);
         }
-        [HarmonyPatch(typeof(Utility), nameof(Utility.pickPersonalFarmEvent))] //nope i'm lost i have no idea what i'm doing
-        class Patch
+        private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
         {
-            static void Postfix(ref FarmEvent __result)
+            if (!Context.IsWorldReady)
+                return;
+
+            if (e.Button == SButton.F5)
             {
-                NPC npcSpouse = Game1.player.getSpouse();
-                bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
-                if (isMarriedOrRoommates)
+                //
+            }
+        }
+        [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")] //nope i'm lost i have no idea what i'm doing
+        [HarmonyPostfix]
+        static void Postfix(ref FarmEvent __result)
+        {
+            ModMonitor.Log($"We're inside the postfix", LogLevel.Error);
+            NPC npcSpouse = Game1.player.getSpouse();
+            bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
+            if (isMarriedOrRoommates)
+            {
+                bool? flag = npcSpouse?.canGetPregnant();
+                if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
                 {
-                    bool? flag = npcSpouse?.canGetPregnant();
-                    if (flag.HasValue && flag.GetValueOrDefault() && Game1.player.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation) && GameStateQuery.CheckConditions(npcSpouse.GetData()?.SpouseWantsChildren))
-                    {
-                        __result = new QuestionEvent(1);
-                    }
+                    __result = new QuestionEvent(1);
                 }
-                if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
+            }
+            if (isMarriedOrRoommates && Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).HasValue && Game1.player.GetSpouseFriendship().NextBirthingDate == null)
+            {
+                long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
+                if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
                 {
-                    long spouseID = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
-                    if (Game1.otherFarmers.TryGetValue(spouseID, out var farmerSpouse))
+                    Farmer spouse = farmerSpouse;
+                    if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
                     {
-                        Farmer spouse = farmerSpouse;
-                        if (spouse.currentLocation == Game1.player.currentLocation && (spouse.currentLocation == Game1.getLocationFromName(spouse.homeLocation) || spouse.currentLocation == Game1.getLocationFromName(Game1.player.homeLocation)) && playersCanGetPregnantHere(spouse.currentLocation as FarmHouse))
-                        {
-                            __result = new QuestionEvent(3);
-                        }
+                        __result = new QuestionEvent(3);
                     }
                 }
             }
