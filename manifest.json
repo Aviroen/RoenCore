@@ -1,0 +1,10 @@
+{
+  "Name": "Aviroen's first Harmony mod",
+  "Author": "Aviroen",
+  "Version": "1.0.0",
+  "Description": "Postfixing Birthing/Adoption Event",
+  "UniqueID": "Aviroen.HBaby",
+  "EntryDll": "GSQChildren.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
