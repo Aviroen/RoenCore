@@ -7,7 +7,7 @@ using StardewValley.Characters;
 using StardewValley.Events;
 using StardewValley.Locations;
 using System.Reflection;
-using StardewValley.TerrainFeatures;
+using System.Runtime.CompilerServices;
 
 namespace RoenCore
 {
@@ -18,6 +18,7 @@ namespace RoenCore
         internal static IMonitor ModMonitor { get; set; } = null!;
         internal static Harmony Harmony { get; set; } = null!;
         internal static IManifest Manifest { get; set; } = null!;
+        internal static HashSet<string> LoadedMods { get; set; } = [];
 
         public override void Entry(IModHelper helper)
         {
@@ -28,20 +29,23 @@ namespace RoenCore
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-
-            Harmony.PatchAll();
             
             Harmony.Patch(
-      original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
-      postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.Postfix))  // assumes main mod class is called ModEntry
-    );
-            
+                original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
+                postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.Postfix)));
 
+            Harmony.PatchAll();
         }
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
             Postfixes.Initialize(ModManifest);
+            Prefixes.Initialize(ModManifest);
+            Transpiling.Initialize(ModManifest);
+            foreach (var mod in Helper.ModRegistry.GetAll())
+            {
+                if (Helper.ModRegistry.IsLoaded(mod.Manifest.UniqueID)) LoadedMods.Add(mod.Manifest.UniqueID);
+            }
         }
         private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
         {

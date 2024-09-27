@@ -57,6 +57,7 @@ public class Postfixes
             }
         }
     }
+    //NOTE TO SELF, READD "UTILITY" IN FRONT OF PLAYERSCANGETPRENGANTHERE AND YEET THE SECOND FUNCTION FOR 1.6.9
     private static bool playersCanGetPregnantHere(FarmHouse farmHouse)
     {
         List<Child> kids = farmHouse.getChildren();
@@ -74,7 +75,4 @@ public class Postfixes
         }
         return false;
     }
-
-    //NOTE TO SELF, READD "UTILITY" IN FRONT OF PLAYERSCANGETPRENGANTHERE AND YEET THE SECOND FUNCTION FOR 1.6.9
-
 }
