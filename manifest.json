@@ -1,10 +1,10 @@
 {
-  "Name": "Aviroen's first Harmony mod",
+  "Name": "Aviroen's Harmony Core",
   "Author": "Aviroen",
   "Version": "1.0.0",
-  "Description": "Postfixing Birthing/Adoption Event",
-  "UniqueID": "Aviroen.GSQBaby",
-  "EntryDll": "GSQChildren.dll",
+  "Description": "A bunch of random harmony prefixes/postfixes/transpilers, whatever I can get my hands on.",
+  "UniqueID": "Aviroen.RoenCore",
+  "EntryDll": "RoenCore.dll",
   "MinimumApiVersion": "4.0.0",
   "UpdateKeys": []
 }
