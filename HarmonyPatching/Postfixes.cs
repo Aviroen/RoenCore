@@ -3,14 +3,9 @@ using StardewValley.Characters;
 using StardewValley.Events;
 using StardewValley.Locations;
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StardewModdingAPI;
 
-namespace RoenCore;
+namespace RoenCore.HarmonyPatching;
 
 public class Postfixes
 {
@@ -31,7 +26,7 @@ public class Postfixes
         bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
         if (npcSpouse != null && npcSpouse.GetData().CustomFields.TryGetValue("Aviroen.GSQBaby", out string customString))
         {
-            Boolean.TryParse(customString, result: out bool stringActivated);
+            bool.TryParse(customString, result: out bool stringActivated);
             if (stringActivated == true)
             {
                 if (isMarriedOrRoommates)

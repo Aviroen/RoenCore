@@ -10,15 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
 
-namespace RoenCore;
-public class Prefixes
+namespace RoenCore.HarmonyPatching;
+public class Transpiling
 {
-    public static Harmony PrefixesHarmony { get; set; } = null!;
+    public static Harmony TranspilingHarmony { get; set; } = null!;
     public static bool IsInitialized;
 
     public static void Initialize(IManifest manifest)
     {
         IsInitialized = true;
-        PrefixesHarmony = new Harmony($"{manifest.UniqueID}_Prefixes");
+        TranspilingHarmony = new Harmony($"{manifest.UniqueID}_Transpilers");
     }
 }
