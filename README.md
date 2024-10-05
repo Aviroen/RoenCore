@@ -1,3 +1,4 @@
+Many thanks to Button for handholding me the entire time and realizing I'm dumb (TM)
 Content Patcher capability to add in a Custom Field to Data/Characters
 
 **REMOVING ADOPTION/PREGNANCY RANDOMIZATION**
