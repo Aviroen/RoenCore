@@ -52,42 +52,11 @@ public class Postfixes
             }
         }
     }
-    //NOTE TO SELF, READD "UTILITY" IN FRONT OF PLAYERSCANGETPRENGANTHERE AND YEET THE SECOND FUNCTION FOR 1.6.9
     /*
-    private static bool playersCanGetPregnantHere(FarmHouse farmHouse)
-    {
-        List<Child> kids = farmHouse.getChildren();
-        if (farmHouse.cribStyle.Value <= 0)
-        {
-            return false;
-        }
-        if (farmHouse.getChildrenCount() < 2 && farmHouse.upgradeLevel >= 2 && kids.Count < 2)
-        {
-            if (kids.Count != 0)
-            {
-                return kids[0].Age > 2;
-            }
-            return true;
-        }
-        return false;
-    }
-     * 	public static bool isGreenRainDay()
-	{
-		return Utility.isGreenRainDay(Game1.dayOfMonth, Game1.season);
-	}
+     * The short description of short circuiting is that the minimal number of conditions will be evaluated from left to right
 
-	/// <summary>Get whether there's green rain scheduled on the given day.</summary>
-	/// <param name="day">The day of month to check.</param>
-	/// <param name="season">The season key to check.</param>
-	public static bool isGreenRainDay(int day, Season season)
-	{
-		if (season == Season.Summer)
-		{
-			Random r = Utility.CreateRandom(Game1.year * 777, Game1.uniqueIDForThisGame);
-			int[] possible_days = new int[8] { 5, 6, 7, 14, 15, 16, 18, 23 };
-			return day == r.ChooseFrom(possible_days);
-		}
-		return false;
-	}
+For example, if you have thingA() && thingB(), and thingA() returns false, thingB() will never even run.
+
+Similarly, if you have thingA() || thingB() and thingA() returns true, thingB() will never run
      */
 }

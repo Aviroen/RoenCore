@@ -24,7 +24,7 @@ namespace RoenCore
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            
+
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
                 postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.Postfix)));
