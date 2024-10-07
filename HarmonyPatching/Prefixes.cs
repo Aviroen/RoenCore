@@ -13,7 +13,6 @@ public class Prefixes
         IsInitialized = true;
         PrefixesHarmony = new Harmony($"{manifest.UniqueID}_Prefixes");
     }
-    [HarmonyPatch(typeof(Farm), nameof(Farm.addCrows))]
     internal static bool Scarecrow(Farm __instance)
     {
         return !__instance.buildings.Any(static building => building.buildingType.Value == "Aviroen.AtraAntiCrow");

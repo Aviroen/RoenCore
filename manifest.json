@@ -1,7 +1,7 @@
 {
   "Name": "Aviroen's Harmony Core",
   "Author": "Aviroen",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "Description": "A bunch of random harmony prefixes/postfixes/transpilers, whatever I can get my hands on.",
   "UniqueID": "Aviroen.RoenCore",
   "EntryDll": "RoenCore.dll",

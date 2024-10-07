@@ -18,8 +18,6 @@ public class Postfixes
         PostfixesHarmony = new Harmony($"{manifest.UniqueID}_Postfixes");
     }
 
-    [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")] //nope i'm lost i have no idea what i'm doing
-    [HarmonyPostfix]
     public static void Postfix(ref FarmEvent __result)
     {
         NPC npcSpouse = Game1.player.getSpouse();
