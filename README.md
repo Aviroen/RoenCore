@@ -22,3 +22,7 @@ The syntax for that is:
 This example is targeting Abigail, and editing her CustomField to be my UniqueID, since it is String -> String, it will try and parse the "text" to be a bool.
 
 If this is left out, you get the standard RNG for adoption/pregnancy question.
+
+/////////////////////////// (I hate formatting GitHub sorry this is gonna be ugly)
+
+Newest chaotic addition: "BuildingType": "Aviroen.AtraAntiCrow" in Data/Buildings will let you have a custom building that scares off all crows.
