@@ -28,8 +28,10 @@ namespace RoenCore
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
                 postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.Postfix)));
+            Harmony.Patch(
+                original: AccessTools.Method(typeof(Farm), nameof(Farm.addCrows)),
+                prefix: new HarmonyMethod(typeof(Prefixes), nameof(Prefixes.Scarecrow)));
 
-            Harmony.PatchAll();
         }
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
