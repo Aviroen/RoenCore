@@ -3,6 +3,7 @@ using StardewModdingAPI.Events;
 using HarmonyLib;
 using StardewValley;
 using RoenCore.HarmonyPatching;
+using StardewValley.GameData.Objects;
 
 namespace RoenCore
 {
@@ -27,22 +28,23 @@ namespace RoenCore
 
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
-                postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.Postfix)));
+                postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.GSQBaby)));
+            
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Farm), nameof(Farm.addCrows)),
                 prefix: new HarmonyMethod(typeof(Prefixes), nameof(Prefixes.Scarecrow)));
+            
+            //Harmony.PatchAll();
 
         }
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
-            Postfixes.Initialize(ModManifest);
-            Prefixes.Initialize(ModManifest);
-            Transpiling.Initialize(ModManifest);
             foreach (var mod in Helper.ModRegistry.GetAll())
             {
                 if (Helper.ModRegistry.IsLoaded(mod.Manifest.UniqueID)) LoadedMods.Add(mod.Manifest.UniqueID);
             }
+
         }
         private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
         {

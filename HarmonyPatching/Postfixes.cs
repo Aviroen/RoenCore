@@ -6,19 +6,9 @@ using StardewValley;
 using StardewModdingAPI;
 
 namespace RoenCore.HarmonyPatching;
-
 public class Postfixes
 {
-    public static Harmony PostfixesHarmony { get; set; } = null!;
-    internal static bool IsInitialized;
-
-    internal static void Initialize(IManifest manifest)
-    {
-        IsInitialized = true;
-        PostfixesHarmony = new Harmony($"{manifest.UniqueID}_Postfixes");
-    }
-
-    public static void Postfix(ref FarmEvent __result)
+    public static void GSQBaby(ref FarmEvent __result)
     {
         NPC npcSpouse = Game1.player.getSpouse();
         bool isMarriedOrRoommates = Game1.player.isMarriedOrRoommates();
