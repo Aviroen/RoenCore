@@ -2,13 +2,16 @@
 using HarmonyLib;
 using StardewValley.Buildings;
 using StardewValley.GameData.Buildings;
+using System.Reflection;
 
 namespace RoenCore.HarmonyPatching;
+[HarmonyPatch]
 public class Prefixes
 {
     /// <summary>Get the building's data from <see cref="F:StardewValley.Game1.buildingData" />, if found.</summary>
     //[HarmonyAfter("")] //get rokugin's uniqueid
-    public static bool Scarecrow(Farm __instance)
+    [HarmonyPatch(typeof(Farm), "addCrows")]
+    public static bool Prefix(Farm __instance)
     {
         foreach (Building building in __instance.buildings)
         {

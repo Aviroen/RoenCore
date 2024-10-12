@@ -25,16 +25,16 @@ namespace RoenCore
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-
+            /*
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
                 postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.GSQBaby)));
             
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Farm), nameof(Farm.addCrows)),
-                prefix: new HarmonyMethod(typeof(Prefixes), nameof(Prefixes.Scarecrow)));
-            
-            //Harmony.PatchAll();
+                prefix: new HarmonyMethod(typeof(Prefixes), nameof(Prefixes.Prefix)));
+            */
+            Harmony.PatchAll();
 
         }
 
