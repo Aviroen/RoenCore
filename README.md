@@ -26,3 +26,17 @@ If this is left out, you get the standard RNG for adoption/pregnancy question.
 /////////////////////////// (I hate formatting GitHub sorry this is gonna be ugly)
 
 Newest chaotic addition: "BuildingType": "Aviroen.AtraAntiCrow" in Data/Buildings will let you have a custom building that scares off all crows.
+
+```
+{
+  "Action": "EditData",
+  "Target": "Data/Buildings",
+  "Fields": {
+    "Deluxe Coop": {
+      "CustomFields": {
+        "Aviroen.AtraAntiCrow": "true"
+      }
+    }
+  }
+}
+```
