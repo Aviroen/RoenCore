@@ -9,7 +9,7 @@ namespace RoenCore.HarmonyPatching;
 public class Prefixes
 {
     /// <summary>Get the building's data from <see cref="F:StardewValley.Game1.buildingData" />, if found.</summary>
-    //[HarmonyAfter("")] //get rokugin's uniqueid
+    [HarmonyPriority(Priority.Last)]
     [HarmonyPatch(typeof(Farm), "addCrows")]
     public static bool Prefix(Farm __instance)
     {

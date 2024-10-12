@@ -9,6 +9,7 @@ namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
 public class Postfixes
 {
+    [HarmonyPriority(Priority.Last)]
     [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")]
     public static void Postfix(ref FarmEvent __result)
     {
