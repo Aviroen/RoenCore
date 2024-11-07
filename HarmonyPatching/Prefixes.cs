@@ -2,7 +2,9 @@
 using HarmonyLib;
 using StardewValley.Buildings;
 using StardewValley.GameData.Buildings;
-using System.Reflection;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using StardewValley.GameData.WildTrees;
 
 namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]

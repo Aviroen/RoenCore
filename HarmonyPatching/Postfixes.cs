@@ -4,6 +4,12 @@ using StardewValley.Events;
 using StardewValley.Locations;
 using StardewValley;
 using StardewModdingAPI;
+using StardewValley.GameData.Characters;
+using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI.Events;
+using StardewValley.GameData.WildTrees;
+using Microsoft.Xna.Framework;
+using StardewValley.Menus;
 
 namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
@@ -49,5 +55,26 @@ public class Postfixes
 For example, if you have thingA() && thingB(), and thingA() returns false, thingB() will never even run.
 
 Similarly, if you have thingA() || thingB() and thingA() returns true, thingB() will never run
-     */
+
+    [HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(typeof(GameLocation), "resetLocalState")]
+    	public virtual Microsoft.Xna.Framework.Rectangle getMugShotSourceRect()
+	{
+		return this.GetData()?.MugShotSourceRect ?? new Microsoft.Xna.Framework.Rectangle(0, (this.Age == 2) ? 4 : 0, 16, 24);
+	}
+         
+    //you can use vector2.distance(light.position, player.position)  to find your radius
+    [HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(typeof(NPC), "getMugShotSourceRect")]
+    public static void Postfix(ref Rectangle __result, NPC __instance)
+    {
+        Texture2D? customTexture = null;
+        if ((__instance.GetData().CustomFields?.TryGetValue("Aviroen.MugShot", out string? textureName) ?? false))
+        {
+            customTexture = Game1.content.Load<Texture2D>(textureName);
+            //new Microsoft.Xna.Framework.Rectangle(0, ((NpcAge)2) ? 4 : 0, 16, 24) ?? false;
+            __result = new Rectangle(0, 0, customTexture.Width, customTexture.Height);
+        }
+    }
+    */
 }

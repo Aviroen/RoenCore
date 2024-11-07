@@ -1,10 +1,10 @@
 {
-  "Name": "Aviroen's Harmony Core",
+  "Name": "RoenCore",
   "Author": "Aviroen",
   "Version": "1.0.2",
   "Description": "A bunch of random harmony prefixes/postfixes/transpilers, whatever I can get my hands on.",
   "UniqueID": "Aviroen.RoenCore",
   "EntryDll": "RoenCore.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:28364" ]
 }
