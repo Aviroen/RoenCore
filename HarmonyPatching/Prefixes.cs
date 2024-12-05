@@ -2,9 +2,10 @@
 using HarmonyLib;
 using StardewValley.Buildings;
 using StardewValley.GameData.Buildings;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using StardewValley.GameData.WildTrees;
+using StardewValley.GameData.Characters;
+using StardewValley.TokenizableStrings;
+using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
@@ -27,7 +28,28 @@ public class Prefixes
         }
         return true;
     }
+    [HarmonyPatch(typeof(LocalizedContentManager), nameof(LocalizedContentManager.LoadString), [typeof(string), typeof(object)])]
+    public static bool Prefix(string path)
+    {
+        if (path == "Strings\\Locations:DoorUnlock_NotFriend_")
+        {
+            if (NPC.TryGetData(ownerKey, out var data))
+            {
+                string newPronouns = Game1.content.LoadString("Strings\\Locations:DoorUnlock_NotFriend_" + TokenParser.ParseText(data.DisplayName));
+                if (newPronouns == null)
+                {
+                    return true;
+                }
+                Game1.drawObjectDialogue(newPronouns);
+                return false;
+            }
+        }
+        return true;
+    }
     /*
-     
-    */
+     * you should check if the path looks like the doorunlock string and if it does get the NPC name from the end of it
+you also need to make sure that newPronouns doesnt end up being null (and if it is null, return true)
+    the path is going to be Strings\\Locations:DoorUnlock_NotFriend_Male if its a male character
+since that is what ShowLockedDoorMessage is trying to load
+     */
 }
