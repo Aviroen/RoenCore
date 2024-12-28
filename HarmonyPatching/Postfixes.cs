@@ -10,11 +10,40 @@ using StardewModdingAPI.Events;
 using StardewValley.GameData.WildTrees;
 using Microsoft.Xna.Framework;
 using StardewValley.Menus;
+using System.Reflection.Metadata.Ecma335;
+using xTile.Layers;
 
 namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
 public class Postfixes
 {
+    internal static readonly string TileProp_Doors = $"{RoenCore.Manifest}_Doors";
+    internal static readonly string tileSheetRef = $"{RoenCore.Manifest}/CustomDoor_texture";
+
+    private static Texture2D LoadCustomDoorTexture(GameLocation location)
+    {
+        return Game1.content.Load<Texture2D>(location.GetData().CustomFields[tileSheetRef]);
+    }
+
+    [HarmonyPatch(typeof(InteriorDoor), "ResetLocalState")]
+    public static void Postfix(InteriorDoor __instance)
+    {
+        bool flicker = false;
+        bool flip = false;
+
+        Microsoft.Xna.Framework.Rectangle sourceRect = default(Microsoft.Xna.Framework.Rectangle);
+        if (__instance.Tile == null)
+            return;
+        if (__instance.Tile.Properties.ContainsKey(TileProp_Doors))
+        {
+            __instance.Sprite = new TemporaryAnimatedSprite("Maps\\" + tileSheetRef, sourceRect, 100f, 4, 1, new Vector2(__instance.Position.X, __instance.Position.Y - 2) * 64f, flicker, flip, (float)((__instance.Position.Y + 1) * 64 - 12) / 10000f, 0f, Color.White, 4f, 0f, 0f, 0f)
+            {
+
+            };
+        }
+    }
+
+
     [HarmonyPriority(Priority.Last)]
     [HarmonyPatch(typeof(Utility), "pickPersonalFarmEvent")]
     public static void Postfix(ref FarmEvent __result)
