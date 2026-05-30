@@ -1,11 +1,8 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using HarmonyLib;
-using StardewValley.GameData.WildTrees;
 using StardewValley;
-using Microsoft.Xna.Framework;
-using StardewValley.Menus;
-using Microsoft.Xna.Framework.Graphics;
+using RoenCore.Patches;
 
 namespace RoenCore
 {
@@ -26,9 +23,8 @@ namespace RoenCore
             Manifest = ModManifest;
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            helper.Events.GameLoop.DayStarted += this.OnDayStarted;
-            helper.Events.World.TerrainFeatureListChanged += this.World_TerrainFeatureListChanged;
+            Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame);
+            Events.Initialize(helper.ModRegistry, Monitor, helper);
             /*
             Harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
@@ -50,41 +46,5 @@ namespace RoenCore
             }
 
         }
-        private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
-        {
-            if (!Context.IsWorldReady)
-                return;
-
-            if (e.Button == SButton.F5)
-            {
-                //
-            }
-        }
-        private void OnDayStarted(object? sender, DayStartedEventArgs e)
-        {
-
-        }
-        private void World_TerrainFeatureListChanged(object? sender, TerrainFeatureListChangedEventArgs e)
-        {
-            //location.terrainFeatures.OnValueRemoved
-            //Listen to the tree's isstump :P
-        }
-        /*
-        public static LightSource? TreeGlow(WildTreeData treeData, string mapName, Vector2 pos)
-        {
-            if ((treeData.CustomFields?.TryGetValue("Aviroen.TreeGlow", out string? customString) ?? false))
-            {
-                //below code from chue https://github.com/Mushymato/StardewMods/blob/main/MiscMapActionsProperties/Framework/Tile/LightSpot.cs#L33-L51
-                string[] args = ArgUtility.SplitBySpace(customString ?? "");
-                if (!ArgUtility.TryGetOptionalFloat(args, 0, out float radius, out string error, defaultValue: 2f, name: "float radius") ||
-                !ArgUtility.TryGetOptional(args, 1, out string colorStr, out error, defaultValue: "White", name: "string color") ||
-                !ArgUtility.TryGetOptional(args, 2, out string textureStr, out error, defaultValue: "1", name: "string texture"))
-                {
-                    ModMonitor.Log(error, LogLevel.Error);
-                    return null;
-                }
-            }
-        }
-        */
     }
 }

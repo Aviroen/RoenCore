@@ -8,6 +8,7 @@ namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
 public class Prefixes
 {
+    /*
     /// <summary>Get the building's data from <see cref="F:StardewValley.Game1.buildingData" />, if found.</summary>
     [HarmonyPriority(Priority.Last)]
     [HarmonyPatch(typeof(Farm), "addCrows")]
@@ -25,7 +26,7 @@ public class Prefixes
         }
         return true;
     }
-    /*
+    
     [HarmonyPatch(typeof(InteriorDoor), "ResetLocalState")]
     public static bool Prefix(GameLocation __instance)
     {

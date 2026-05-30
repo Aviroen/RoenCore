@@ -17,6 +17,7 @@ namespace RoenCore.HarmonyPatching;
 [HarmonyPatch]
 public class Postfixes
 {
+    /*
     internal static readonly string TileProp_Doors = $"{RoenCore.Manifest}_Doors";
     internal static readonly string tileSheetRef = $"{RoenCore.Manifest}/CustomDoor_texture";
 
@@ -78,7 +79,7 @@ public class Postfixes
             }
         }
     }
-    /*
+    
      * The short description of short circuiting is that the minimal number of conditions will be evaluated from left to right
 
 For example, if you have thingA() && thingB(), and thingA() returns false, thingB() will never even run.
