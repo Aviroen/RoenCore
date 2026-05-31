@@ -1,42 +1,17 @@
-Many thanks to Button for handholding me the entire time and realizing I'm dumb (TM)
+Adds an event command: Aviroen.Large
 
-Content Patcher capability to add in a Custom Field to Data/Characters
+Aviroen.Large takes 4 arguments
 
-**REMOVING ADOPTION/PREGNANCY RANDOMIZATION**
+<npc_name> <frame_int> <width_int> <height_int>
 
-The syntax for that is:
-```
-{
-  "Action": "EditData",
-  "Target": "Data/Characters",
-  "Fields": {
-    "Abigail": {
-      "CustomFields": {
-        "Aviroen.GSQBaby": "true"
-      }
-    }
-  }
-}
-```
+When you're scripting events you use it like so:
 
-This example is targeting Abigail, and editing her CustomField to be my UniqueID, since it is String -> String, it will try and parse the "text" to be a bool.
+```Aviroen.Large Abigail 18 32 32```
 
-If this is left out, you get the standard RNG for adoption/pregnancy question.
+This makes it so Abigail will use her 18th frame (starting from 0) and will now be 32 width and 32 height.
 
-/////////////////////////// (I hate formatting GitHub sorry this is gonna be ugly)
+If you need to return the NPC back to normal size:
 
-Newest chaotic addition: "BuildingType": "Aviroen.AtraAntiCrow" in Data/Buildings will let you have a custom building that scares off all crows.
+```Aviroen.Large Abigail 0 16 32```
 
-```
-{
-  "Action": "EditData",
-  "Target": "Data/Buildings",
-  "Fields": {
-    "Deluxe Coop": {
-      "CustomFields": {
-        "Aviroen.AtraAntiCrow": "true"
-      }
-    }
-  }
-}
-```
+So Abigail will be on frame 0, at 16 width, and 32 height.
