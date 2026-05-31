@@ -1,15 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<EnableHarmony>true</EnableHarmony>
 		<TargetFramework>net6.0</TargetFramework>
+		<EnableHarmony>true</EnableHarmony>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>latestmajor</LangVersion>
+		<ModFolderName>RoenCore</ModFolderName>
+		<Name>RoenCore</Name>
+		<Authors>Aviroen</Authors>
+		<Description>The most random of crap I can think of.</Description>
+		<UniqueId>Aviroen.SB</UniqueId>
+		<MinimumGameVersion>1.6.15</MinimumGameVersion>
+		<MinimumApiVersion>4.5.2</MinimumApiVersion>
+		<UpdateKeys>Nexus:28364</UpdateKeys>
+		<Version>1.0.4</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Leclair.Stardew.ModManifestBuilder" Version="2.4.1" />
 		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.4.0" />
+		<Publicize Include="Stardew Valley" />
 	</ItemGroup>
 	<PropertyGroup>
 		<DebugType>embedded</DebugType>

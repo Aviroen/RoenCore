@@ -1,8 +1,10 @@
-﻿using StardewModdingAPI;
-using StardewModdingAPI.Events;
+﻿using System.Reflection;
 using HarmonyLib;
-using StardewValley;
 using RoenCore.Patches;
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
+using StardewValley;
+using StardewValley.Triggers;
 
 namespace RoenCore
 {
@@ -23,18 +25,15 @@ namespace RoenCore
             Manifest = ModManifest;
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame);
-            Events.Initialize(helper.ModRegistry, Monitor, helper);
-            /*
-            Harmony.Patch(
-                original: AccessTools.Method(typeof(Utility), nameof(Utility.pickPersonalFarmEvent)),
-                postfix: new HarmonyMethod(typeof(Postfixes), nameof(Postfixes.GSQBaby)));
             
-            Harmony.Patch(
-                original: AccessTools.Method(typeof(Farm), nameof(Farm.addCrows)),
-                prefix: new HarmonyMethod(typeof(Prefixes), nameof(Prefixes.Prefix)));
-            */
-            Harmony.PatchAll();
+            Events.Initialize(helper.ModRegistry, Monitor, helper);
+            TriggerActions.Initialize(helper.ModRegistry);
+
+            Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame); //name, frame, width, height
+            Event.RegisterCommand("Aviroen.Festival", Events.command_playerControl); //event id, true/false, int in ms for timer, npc for host, string for host
+            TriggerActionManager.RegisterAction("Aviroen.RandomDialogue", TriggerActions.Yapper); //written by irocendar, my savior, hero, god to witness my stupidity
+
+            Harmony.PatchAll(Assembly.GetExecutingAssembly());
 
         }
 

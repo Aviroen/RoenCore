@@ -1,5 +1,6 @@
 ﻿using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Events;
 
 namespace RoenCore.Patches;
 
@@ -22,7 +23,10 @@ internal class Events
         int width;
         int height;
         string error;
-        if (!ArgUtility.TryGet(args, 1, out actorName, out error, allowBlank: true, "actorName") || !ArgUtility.TryGetInt(args, 2, out frame, out error, "frame") || !ArgUtility.TryGetInt(args, 3, out width, out error, "width") || !ArgUtility.TryGetInt(args, 4, out height, out error, "height"))
+        if (!ArgUtility.TryGet(args, 1, out actorName, out error, allowBlank: true, "actorName") 
+            || !ArgUtility.TryGetInt(args, 2, out frame, out error, "frame") 
+            || !ArgUtility.TryGetInt(args, 3, out width, out error, "width") 
+            || !ArgUtility.TryGetInt(args, 4, out height, out error, "height"))
         {
             context.LogErrorAndSkip(error);
             return;
@@ -42,5 +46,32 @@ internal class Events
         }
         @event.CurrentCommand++;
         @event.Update(context.Location, context.Time);
+    }
+    public static void command_playerControl(Event @event, string[] args, EventContext context)
+    {
+        //event id, true/false, int in ms for timer, npc for host, string for host
+        bool isOptionalNpc;
+        Game1.player.CanMove = true;
+        Game1.viewportFreeze = false;
+        Game1.forceSnapOnNextViewportUpdate = true;
+        Game1.player.canOnlyWalk = false;
+        Game1.globalFade = false;
+        if (!ArgUtility.TryGet(args, 1, out var playerControlEventID, out var error, allowBlank: false, "string playerControlEventID")
+            || !ArgUtility.TryGetBool(args, 2, out var timerBool, out error, "string timer bool")
+            || !ArgUtility.TryGetInt(args, 3, out var timer, out error, "string timer")
+            || !ArgUtility.TryGet(args, 4, out var npc, out error, allowBlank: false, "string NPC Name")
+            || !ArgUtility.TryGet(args, 5, out var hostMessage, out error, allowBlank: false, "string host message"))
+        {
+            context.LogErrorAndSkip(error);
+            return;
+        }
+        NPC n = @event.getActorByName(npc, out isOptionalNpc);
+        @event.festivalHost = n;
+        @event.hostMessageKey = hostMessage;
+        if (timerBool == true)
+        {
+            @event.festivalTimer = timer;
+        }
+        @event.CurrentCommand++;
     }
 }
