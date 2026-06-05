@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
+using RoenCore.Framework;
 
 namespace RoenCore.Patches;
 
@@ -87,7 +88,12 @@ internal class Events
         }
         foreach (var entry in Game1.characterData)
         {
-            if (entry.Value.CustomFields.ContainsKey(modID + "_EngagedInvite"))
+            if (!AssetManager.NpcData.ContainsKey(modID))
+            {
+                Monitor.Log($"\nNo entry matching '{entry}' found in 'Aviroen.RoenCore/NpcList' data asset.", LogLevel.Error);
+                return;
+            }
+            if (AssetManager.NpcData.ContainsKey(modID))
             {
                 /*
                 for (int x = 0; x < rectangle.Width * rectangle.Height; x++)

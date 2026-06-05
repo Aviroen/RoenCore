@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using RoenCore.Framework;
 using RoenCore.Patches;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -32,6 +33,9 @@ namespace RoenCore
             Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame); //name, frame, width, height
             //Event.RegisterCommand("Aviroen.Festival", Events.command_playerControl); //event id, true/false, int in ms for timer, npc for host, string for host
             Event.RegisterCommand("Aviroen.AddActors", Events.command_TempAct);//{{ModId}} x y width height
+
+            helper.Events.Content.AssetRequested += static (_, e) => AssetManager.OnAssetRequested(e);
+            helper.Events.Content.AssetsInvalidated += static (_, e) => AssetManager.OnAssetInvalidated(e);
 
             Harmony.PatchAll(Assembly.GetExecutingAssembly());
 
