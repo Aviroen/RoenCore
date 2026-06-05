@@ -2,6 +2,7 @@
 using StardewModdingAPI;
 using StardewValley;
 using RoenCore.Framework;
+using RoenCore.Models;
 
 namespace RoenCore.Patches;
 
@@ -88,12 +89,8 @@ internal class Events
         }
         foreach (var entry in Game1.characterData)
         {
-            if (!AssetManager.NpcData.ContainsKey(modID))
-            {
-                Monitor.Log($"\nNo entry matching '{entry}' found in 'Aviroen.RoenCore/NpcList' data asset.", LogLevel.Error);
-                return;
-            }
-            if (AssetManager.NpcData.ContainsKey(modID))
+            var NpcModelDataAsset = Game1.content.Load<Dictionary<string, NpcModel>>("Aviroen.RoenCore/NpcList");
+            if (NpcModelDataAsset.TryGetValue(modID, out var InvitedList))
             {
                 /*
                 for (int x = 0; x < rectangle.Width * rectangle.Height; x++)

@@ -29,6 +29,7 @@ internal class AssetManager
         {
             if (name.IsEquivalentTo("Aviroen.RoenCore/NpcList"))
             {
+                RoenCore.ModMonitor.Log($"Loaded asset Aviroen.RoenCore/NpcList invalidated, reloading.");
                 NpcListData = null!;
             }
         }
