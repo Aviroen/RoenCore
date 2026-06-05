@@ -10,7 +10,7 @@
 		<Name>RoenCore</Name>
 		<Authors>Aviroen</Authors>
 		<Description>The most random of crap I can think of.</Description>
-		<UniqueId>Aviroen.SB</UniqueId>
+		<UniqueId>Aviroen.RoenCore</UniqueId>
 		<MinimumGameVersion>1.6.15</MinimumGameVersion>
 		<MinimumApiVersion>4.5.2</MinimumApiVersion>
 		<UpdateKeys>Nexus:28364</UpdateKeys>

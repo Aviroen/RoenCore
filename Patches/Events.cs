@@ -1,6 +1,6 @@
-﻿using StardewModdingAPI;
+﻿using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Events;
 
 namespace RoenCore.Patches;
 
@@ -47,6 +47,7 @@ internal class Events
         @event.CurrentCommand++;
         @event.Update(context.Location, context.Time);
     }
+    /*
     public static void command_playerControl(Event @event, string[] args, EventContext context)
     {
         //event id, true/false, int in ms for timer, npc for host, string for host
@@ -73,5 +74,33 @@ internal class Events
             @event.festivalTimer = timer;
         }
         @event.CurrentCommand++;
+    }
+    */
+    public static void command_TempAct(Event @event, string[] args, EventContext context)
+    {
+        //{{ModId}} x y width height
+        if (!ArgUtility.TryGet(args, 1, out var modID, out var error, allowBlank: false, "string ModId")
+            || !ArgUtility.TryGetRectangle(args, 2, out Rectangle rectangle, out error, "rectangle"))
+        {
+            context.LogErrorAndSkip(error);
+            return;
+        }
+        foreach (var entry in Game1.characterData)
+        {
+            if (entry.Value.CustomFields.ContainsKey(modID + "_EngagedInvite"))
+            {
+                /*
+                for (int x = 0; x < rectangle.Width * rectangle.Height; x++)
+                {
+                    @event.addActor(npcID, Game1.random.Next(x), Game1.random.Next(x), 0, context.Location);
+                }
+                @event.CurrentCommand++;
+                */
+                int x = Game1.random.Next(rectangle.X, rectangle.X + rectangle.Width);
+                int y = Game1.random.Next(rectangle.Y, rectangle.Y + rectangle.Height);
+                @event.addActor(entry.Key, x, y, 0, context.Location);
+                @event.CurrentCommand++;
+            }
+        }
     }
 }

@@ -30,8 +30,8 @@ namespace RoenCore
             TriggerActions.Initialize(helper.ModRegistry);
 
             Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame); //name, frame, width, height
-            Event.RegisterCommand("Aviroen.Festival", Events.command_playerControl); //event id, true/false, int in ms for timer, npc for host, string for host
-            TriggerActionManager.RegisterAction("Aviroen.RandomDialogue", TriggerActions.Yapper); //written by irocendar, my savior, hero, god to witness my stupidity
+            //Event.RegisterCommand("Aviroen.Festival", Events.command_playerControl); //event id, true/false, int in ms for timer, npc for host, string for host
+            Event.RegisterCommand("Aviroen.AddActors", Events.command_TempAct);//{{ModId}} x y width height
 
             Harmony.PatchAll(Assembly.GetExecutingAssembly());
 
