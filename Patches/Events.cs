@@ -20,15 +20,10 @@ internal class Events
     public static void command_LargeFrame(Event @event, string[] args, EventContext context)
     {
         //name, frame, width, height
-        string actorName;
-        int frame;
-        int width;
-        int height;
-        string error;
-        if (!ArgUtility.TryGet(args, 1, out actorName, out error, allowBlank: true, "actorName") 
-            || !ArgUtility.TryGetInt(args, 2, out frame, out error, "frame") 
-            || !ArgUtility.TryGetInt(args, 3, out width, out error, "width") 
-            || !ArgUtility.TryGetInt(args, 4, out height, out error, "height"))
+        if (!ArgUtility.TryGet(args, 1, out var actorName, out var error, allowBlank: true, "actorName") 
+            || !ArgUtility.TryGetInt(args, 2, out var frame, out error, "frame") 
+            || !ArgUtility.TryGetInt(args, 3, out var width, out error, "width") 
+            || !ArgUtility.TryGetInt(args, 4, out var height, out error, "height"))
         {
             context.LogErrorAndSkip(error);
             return;
@@ -81,24 +76,20 @@ internal class Events
     public static void command_TempAct(Event @event, string[] args, EventContext context)
     {
         //{{ModId}} x y width height
-        if (!ArgUtility.TryGet(args, 1, out var modID, out var error, allowBlank: false, "string ModId")
+        if (!ArgUtility.TryGet(args, 1, out var actorName, out var error, allowBlank: false, "string NpcName")
             || !ArgUtility.TryGetRectangle(args, 2, out Rectangle rectangle, out error, "rectangle"))
         {
             context.LogErrorAndSkip(error);
             return;
         }
-        foreach (var entry in Game1.characterData)
+        bool isOptionalNpc;
+        NPC n = @event.getActorByName(actorName, out isOptionalNpc);
+
+        var NpcModelDataAsset = Game1.content.Load<Dictionary<string, NpcModel>>("Aviroen.RoenCore/NpcList");
+        foreach (var entry in NpcModelDataAsset)
         {
-            var NpcModelDataAsset = Game1.content.Load<Dictionary<string, NpcModel>>("Aviroen.RoenCore/NpcList");
-            if (NpcModelDataAsset.TryGetValue(modID, out var InvitedList))
+            if (NpcModelDataAsset.TryGetValue(actorName, out var InvitedList))
             {
-                /*
-                for (int x = 0; x < rectangle.Width * rectangle.Height; x++)
-                {
-                    @event.addActor(npcID, Game1.random.Next(x), Game1.random.Next(x), 0, context.Location);
-                }
-                @event.CurrentCommand++;
-                */
                 int x = Game1.random.Next(rectangle.X, rectangle.X + rectangle.Width);
                 int y = Game1.random.Next(rectangle.Y, rectangle.Y + rectangle.Height);
                 @event.addActor(entry.Key, x, y, 0, context.Location);
