@@ -11,7 +11,7 @@ internal class TriggerActions
     {
         ModRegistry = registry;
     }
-    public static bool command_ReceiveInvite(string[] args, TriggerActionContext context, out string? error)
+    public static bool command_LargeSized(string[] args, TriggerActionContext context, out string? error)
     {
         if (!ArgUtility.TryGet(args, ))
     }

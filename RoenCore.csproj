@@ -14,7 +14,9 @@
 		<MinimumGameVersion>1.6.15</MinimumGameVersion>
 		<MinimumApiVersion>4.5.2</MinimumApiVersion>
 		<UpdateKeys>Nexus:28364</UpdateKeys>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
+		<Version Condition="'$(Configuration)'=='DEBUG'">$(Version)-Debug-$([System.DateTime]::Now.ToString(`yyyyMMdd`))</Version>
+		<Version_AppendConfiguration>false</Version_AppendConfiguration>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,10 +28,6 @@
 		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.4.0" />
 		<Publicize Include="Stardew Valley" />
 	</ItemGroup>
-	<PropertyGroup>
-		<DebugType>embedded</DebugType>
-	</PropertyGroup>
-
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties manifest_1json__JsonSchema="" />

@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
+using ContentPatcher;
 using HarmonyLib;
 using RoenCore.Framework;
+using RoenCore.Tokens;
 using RoenCore.Patches;
+//using RoenCore.API;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -26,16 +29,17 @@ namespace RoenCore
             Manifest = ModManifest;
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            
+
             Events.Initialize(helper.ModRegistry, Monitor, helper);
             TriggerActions.Initialize(helper.ModRegistry);
 
             Event.RegisterCommand("Aviroen.Large", Events.command_LargeFrame); //name, frame, width, height
             //Event.RegisterCommand("Aviroen.Festival", Events.command_playerControl); //event id, true/false, int in ms for timer, npc for host, string for host
-            Event.RegisterCommand("Aviroen.AddActors", Events.command_TempAct);//{{ModId}} x y width height
+            //Event.RegisterCommand("Aviroen.AddActors", Events.command_TempAct);//{{ModId}} x y width height
 
             helper.Events.Content.AssetRequested += static (_, e) => AssetManager.OnAssetRequested(e);
             helper.Events.Content.AssetsInvalidated += static (_, e) => AssetManager.OnAssetInvalidated(e);
+            //helper.Events.GameLoop.GameLaunched += static (_, e) => AssetManager.OnGameLaunched(e);
 
             Harmony.PatchAll(Assembly.GetExecutingAssembly());
 
@@ -43,11 +47,13 @@ namespace RoenCore
 
         private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
         {
-            foreach (var mod in Helper.ModRegistry.GetAll())
+            var CPapi = this.Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            if (CPapi is null)
             {
-                if (Helper.ModRegistry.IsLoaded(mod.Manifest.UniqueID)) LoadedMods.Add(mod.Manifest.UniqueID);
+                return;
             }
 
+            CPapi.RegisterToken(ModManifest, "EndRange", new EndRange());
         }
     }
 }

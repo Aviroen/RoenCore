@@ -35,5 +35,8 @@ internal class Handler
         }
         
     }
+    //Gender = ((!isMale && !isFemale) ? Gender.NB : (!isMale) ? Gender.Female : Gender.Male);
+    //is this condition true ? yes : no
+    //a ? b : c ? d : e == a ? b : (c ? d : e)
 }
 
